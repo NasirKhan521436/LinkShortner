@@ -1,0 +1,21 @@
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["clientExtensions"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Link {
+  code         String    @id @db.VarChar(8)
+  target_url   String    @db.Text
+  clicks       Int       @default(0)
+  created_at   DateTime  @default(now()) @db.Timestamptz(6)
+  last_clicked DateTime? @db.Timestamptz(6)
+  
+  // CRITICAL FIX: Maps the Prisma Model to the SQL table name used in src/lib/links.js
+  @@map("links")
+}
